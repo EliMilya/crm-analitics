@@ -1,0 +1,95 @@
+<div class="row">
+  <div class="col s12">
+    <div class="page-subtitle">
+      <h4>Positions:</h4>
+      <button
+        class="waves-effect waves-light btn grey darken-1 btn-small"
+        (click)="onAddPosition()"
+      >
+        Add position
+      </button>
+    </div>
+
+    <div *ngIf="!loading; else loader">
+      <div class="collection" *ngIf="positions.length !== 0; else empty">
+        <a
+          *ngFor="let position of positions"
+          class="collection-item collection-item-icon"
+          (click)="onSelectPosition(position)"
+        >
+                    <span>
+                        {{position.name}} <strong>{{position.cost}} rub.</strong>
+                    </span>
+          <span>
+                        <i
+                          class="material-icons"
+                          (click)="onDeletePosition($event, position)"
+                        >
+                          delete
+                        </i>
+                    </span>
+        </a>
+      </div>
+      <ng-template #empty>
+        <div class="center">You don't have any positions.</div>
+      </ng-template>
+    </div>
+    <ng-template #loader>
+      <app-loader></app-loader>
+    </ng-template>
+  </div>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="modal" #modal>
+    <div class="modal-content">
+      <h4 class="mb1">Add position</h4>
+      <div class="input-field">
+        <input
+          formControlName="name"
+          id="pos-name"
+          type="text"
+          [ngClass]="{'invalid': form.get('name').invalid && form.get('name').touched}"
+        >
+        <label for="pos-name">Title</label>
+        <span
+          *ngIf="form.get('name').invalid && form.get('name').touched"
+          class="helper-text red-text"
+        >
+          Title must be!
+        </span>
+      </div>
+      <div class="input-field">
+        <input
+          formControlName="cost"
+          id="pos-cost"
+          type="number"
+          min="1"
+          [ngClass]="{'invalid': form.get('cost').invalid && form.get('cost').touched}"
+        >
+        <label for="pos-cost">Price</label>
+        <span
+          *ngIf="form.get('cost').invalid && form.get('cost').touched"
+          class="helper-text red-text"
+        >
+          Please insert correct price. Minimum is 1.
+        </span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        (click)="onCancel()"
+        [disabled]="form.disabled"
+        class="modal-action waves-effect waves-black btn-flat">
+        Cancel
+      </button>
+      <button
+        type="submit"
+        [disabled]="form.disabled || form.invalid"
+        class="modal-action btn waves-effect">
+        Save
+      </button>
+    </div>
+  </div>
+</form>
